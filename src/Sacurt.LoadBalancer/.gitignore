@@ -1,0 +1,48 @@
+# Build files
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.vs
+*.vscode/
+*.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Dependency directories
+node_modules/
+wwwroot/lib/
+
+# Environment & Secrets
+.env
+secrets.json
+
+# Compiled DLLs
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio files
+.vs/
+.idea/
+
+# Rider & JetBrains
+.idea/
+*.sln.iml
+
+# NuGet Packages
+*.nupkg
+packages/
+project.lock.json
+
+# Entity Framework Migrations
+Migrations/
+
+# Publish output
+publish/
+wwwroot/dist/
