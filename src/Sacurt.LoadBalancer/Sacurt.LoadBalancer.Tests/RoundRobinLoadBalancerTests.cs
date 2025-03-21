@@ -35,13 +35,24 @@ namespace Sacurt.LoadBalancer.Tests
         }
 
         [TestMethod]
-        public async Task RoundRobin_Algorithm_ShouldThrowExceptionIfGetResourceIsCalledFirst()
+        public async Task RoundRobin_Algorithm_ShouldThrowInvalidOperationExceptionIfGetResourceIsCalledFirst()
         { 
             var roundRobinStrategy = new RoundRobinLoadBalancerStrategy<string>();
             var loadBalancer = new LoadBalancer<string>(roundRobinStrategy);
 
             // Assert
             await Assert.ThrowsExceptionAsync<InvalidOperationException>(loadBalancer.GetResourceAsync); 
+        }
+
+        [TestMethod]
+        public async Task RoundRobin_Algorithm_ShouldThrowArgumentNullExceptionIfAddedNullResource()
+        {
+            var roundRobinStrategy = new RoundRobinLoadBalancerStrategy<string>();
+            var loadBalancer = new LoadBalancer<string>(roundRobinStrategy);
+
+            // Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                loadBalancer.AddResourceAsync(null));
         }
     }
 }
