@@ -8,8 +8,8 @@ namespace Sacurt.Load_Balancer.Interfaces
 {
     public interface ILoadBalancerStrategy<T> 
     {
-        Task AddResourceAsync(T resource);
+        void AddResource(T resource);
 
-        Task<T> GetResourceAsync();
+        T GetResource();
     }
 }

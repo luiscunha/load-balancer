@@ -2,18 +2,29 @@
 
 namespace Sacurt.Load_Balancer
 {
-    public class LoadBalancer<T>(ILoadBalancerStrategy<T> strategy) 
+    public class LoadBalancer<T>(ILoadBalancerStrategy<T> strategy)
     {
         protected ILoadBalancerStrategy<T> Strategy { get; } = strategy;
+        private readonly object _lock = new object();
 
-        public async Task AddResourceAsync(T resource)
+        public void AddResource(T resource)
         {
-            await Strategy.AddResourceAsync(resource); 
+            if (resource == null)
+                throw new ArgumentNullException($"Cannot add null resource {nameof(resource)}.");
+
+            lock (_lock)
+            {
+                Strategy.AddResource(resource);
+            }
         }
 
-        public async Task<T> GetResourceAsync()
+        public T GetResource()
         {
-            return await Strategy.GetResourceAsync();
+            lock (_lock)
+            {
+                return Strategy.GetResource();
+            }
         }
     }
 }
+

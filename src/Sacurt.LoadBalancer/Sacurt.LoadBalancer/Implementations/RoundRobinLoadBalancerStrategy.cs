@@ -5,50 +5,28 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Sacurt.Load_Balancer.Interfaces;
-using Sacurt.LoadBalancer.Common;
+using Sacurt.Load_Balancer.Common;
 
 namespace Sacurt.Load_Balancer.Implementations
 {
-    public class RoundRobinLoadBalancerStrategy<T> : ILoadBalancerStrategy<T> 
+    public class RoundRobinLoadBalancerStrategy<T> : ILoadBalancerStrategy<T>
     {
-        private Node<T>? _current;
-        private Node<T>? _tail;
+        private CircularLinkedList<T> _circularLinkedList = new CircularLinkedList<T>();
 
-        public Task AddResourceAsync(T resource)
-        {
-            if (resource == null)
-                throw new ArgumentNullException($"Cannot add null resource {nameof(resource)}.");
+        public void AddResource(T resource)
+        {          
+            if (_circularLinkedList.Contains(resource))
+                throw new InvalidOperationException("Cannot add duplicated resource.");
 
-            var node = new Node<T>(resource);
-
-            if (_tail == null)
-            {
-                _tail = node;
-                _tail.Next = _tail;
-                _current = node;
-
-            }
-            else
-            {
-                var tempNode = _tail.Next;
-                _tail.Next = node;
-                node.Next = tempNode;
-                _tail = node;
-            }
-
-            return Task.CompletedTask;
+            _circularLinkedList.Add(resource);            
         }
 
-        public Task<T> GetResourceAsync()
+        public T GetResource()
         {
-            if(_current == null)
+            if (_circularLinkedList.IsEmpty())
                 throw new InvalidOperationException("No resources available.");
 
-            var resource = _current!.Value;
-            _current = _current.Next;
-            return Task.FromResult(resource);
-
+            return _circularLinkedList.GetNext()!;
         }
-
     }
 }
