@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sacurt.LoadBalancer.Common
+namespace Sacurt.Load_Balancer.Common
 {
     internal record Node<T> 
     {
