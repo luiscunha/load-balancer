@@ -13,20 +13,18 @@ namespace Sacurt.Load_Balancer.Implementations
     {
         private CircularLinkedList<T> _circularLinkedList = new CircularLinkedList<T>();
 
+        public bool IsEmpty() => _circularLinkedList.IsEmpty();
+        
         public void AddResource(T resource)
-        {          
-            if (_circularLinkedList.Contains(resource))
-                throw new InvalidOperationException("Cannot add duplicated resource.");
-
+        {                     
             _circularLinkedList.Add(resource);            
         }
 
+        public bool Exists(T resource) => _circularLinkedList.Contains(resource);
+
         public T GetResource()
         {
-            if (_circularLinkedList.IsEmpty())
-                throw new InvalidOperationException("No resources available.");
-
             return _circularLinkedList.GetNext()!;
-        }
+        }      
     }
 }
