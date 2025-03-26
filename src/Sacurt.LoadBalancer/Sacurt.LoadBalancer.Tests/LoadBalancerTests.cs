@@ -7,7 +7,7 @@ namespace Sacurt.LoadBalancer.Tests
     public partial class LoadBalancerTests
     {
         [TestMethod]
-        public void AddResource_ShouldAddResourceAndRetrieveTheSameResource_WithDefaultStrategy()
+        public void AddResource_ShouldAddResourceAndRetrieveTheSameResourceWithDefaultStrategy()
         {
             // Arrange 
             var loadBalancer = LoadBalancerFactory.DefaultStrategy<Machine>();
@@ -25,7 +25,7 @@ namespace Sacurt.LoadBalancer.Tests
         }
 
         [TestMethod]
-        public void GetResource_ShouldFollowRoundRobinStrategy_WithDefaultStrategy()
+        public void GetResource_ShouldFollowRoundRobinStrategyWithDefaultStrategy()
         {
             // Arrange
             var server1 = "server1";
@@ -88,6 +88,29 @@ namespace Sacurt.LoadBalancer.Tests
 
             // Act & Assert
             Assert.ThrowsException<ArgumentNullException>(() => loadBalancer.AddResource(null));
+        }
+
+        [TestMethod]
+        public void GetResource_ShouldHandleHighVolumeOfResources()
+        {
+            // Arrange
+            var loadBalancer = LoadBalancerFactory.RoundRobinStrategy<string>();
+            var dictionary = new Dictionary<string, int>();
+            var limit = 10000;
+
+            Enumerable.Range(1, limit).ToList().ForEach(i =>
+            {
+                loadBalancer.AddResource($"myserver{i}.com");
+            });
+
+            // Act
+            Enumerable.Range(1, limit).ToList().ForEach(i =>
+            {
+                dictionary[loadBalancer.GetResource()] = 1;
+            });
+
+            // Assert
+            Assert.IsTrue(dictionary.All(resource => resource.Value == 1));
         }
     }
 }

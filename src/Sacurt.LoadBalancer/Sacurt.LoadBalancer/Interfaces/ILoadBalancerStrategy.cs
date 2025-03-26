@@ -10,6 +10,10 @@ namespace Sacurt.Load_Balancer.Interfaces
     {
         void AddResource(T resource);
 
+        bool IsEmpty();
+
+        bool Exists(T resource);    
+
         T GetResource();
     }
 }

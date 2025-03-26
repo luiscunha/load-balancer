@@ -1,4 +1,5 @@
-﻿using Sacurt.Load_Balancer.Interfaces;
+﻿using Sacurt.Load_Balancer.Common;
+using Sacurt.Load_Balancer.Interfaces;
 
 namespace Sacurt.Load_Balancer
 {
@@ -14,6 +15,9 @@ namespace Sacurt.Load_Balancer
 
             lock (_lock)
             {
+                if (Strategy.Exists(resource))
+                    throw new InvalidOperationException("Cannot add duplicated resource.");
+
                 Strategy.AddResource(resource);
             }
         }
@@ -22,6 +26,9 @@ namespace Sacurt.Load_Balancer
         {
             lock (_lock)
             {
+                if (Strategy.IsEmpty())
+                    throw new InvalidOperationException("No resources available.");
+
                 return Strategy.GetResource();
             }
         }
